@@ -1,0 +1,18 @@
+version: "3.5"
+services:
+  maven-bike-santander:
+    build: ./prediction-job
+    container_name: maven_generate_packages-bike-santander
+    expose:
+      - "8099"
+    ports:
+        - "8099:8099"
+    environment:
+      - "SPARK_MASTER=spark-master:7077"
+    volumes:
+      - ./prediction-job:/prediction-job
+    networks:
+      - fiware
+     
+networks:
+  fiware:

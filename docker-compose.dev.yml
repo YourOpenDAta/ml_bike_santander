@@ -1,0 +1,47 @@
+version: "3.5"
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:3.4
+    command: --nojournal
+    networks:
+      - fiware
+#    ports:
+#      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+  orion:
+    image: fiware/orion-ld:1.0.1
+    container_name: orion
+    depends_on:
+      - mongo
+    command: -dbhost mongo -dbuser root -dbpwd example #-logLevel DEBUG
+    ports:
+      - "1026:1026"
+    environment:
+      ORIONLD_MONGO_USER: root
+      ORIONLD_MONGO_PASSWORD: example
+    networks:
+      - fiware
+    restart: unless-stopped
+    healthcheck:
+      test: curl --fail -s http://orion:1026/version || exit 1
+  spark-master-bike-santander:
+    image: bde2020/spark-master:2.4.5-hadoop2.7
+    container_name: spark-master-bike-santander
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "9002:9002"
+      - "4040:4040"
+    environment:
+      - INIT_DAEMON_STEP=setup_spark
+      - "constraint:node==spark-master"
+    networks:
+         - fiware
+    command: bash -c "sleep 20 && sh /prediction-job/spark-jobs/run-spark-jobs-predict.sh"
+    volumes:
+      - ./prediction-job:/prediction-job
+networks:
+  fiware:

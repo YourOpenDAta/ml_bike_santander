@@ -1,0 +1,6 @@
+prediction-job/target/*
+prediction-job/.idea
+prediction-job/bin
+prediction-job/*.csv
+.env
+other_docs

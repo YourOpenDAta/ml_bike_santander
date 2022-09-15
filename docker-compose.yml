@@ -1,0 +1,24 @@
+version: "3.5"
+services:
+  spark-master-bike-santander:
+    image: bde2020/spark-master:2.4.5-hadoop2.7
+    container_name: spark-master-bike-santander
+    ports:
+      - "9002:9002"
+    environment:
+      - INIT_DAEMON_STEP=setup_spark
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - "constraint:node==spark-master"
+    networks:
+         - ckan_yoda
+    command: bash -c "sleep 20 && sh /prediction-job/spark-jobs/run-spark-jobs-predict.sh"
+    volumes:
+      - ./prediction-job:/prediction-job
+    logging:
+      options:
+        max-size: 50m
+networks:
+  ckan_yoda:
+    external: true
+    name: ckan_yoda
