@@ -14,7 +14,7 @@ http://datos.santander.es/api/rest/datasets/tusbic_puestos_libres.json?items=17
 
 * Load and save the `prediction-job/santander_bike.csv` [from external source](https://drive.upm.es/s/wsSOZIrjj8xOR3H)
 ```shell
-curl -o prediction-job/santander_bike.csv https://drive.upm.es/s/wsSOZIrjj8xOR3H
+curl -o prediction-job/santander_bike.csv https://drive.upm.es/s/wsSOZIrjj8xOR3H/download
 ```
 
 * If the model already exists (`prediction-job/model`) just build de project packages
