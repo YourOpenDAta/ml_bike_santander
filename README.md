@@ -6,6 +6,11 @@ http://datos.santander.es/api/rest/datasets/tusbic_puestos_libres.json?items=17
 ## Initial tasks
 
 * Copy the `template.env` file into `.env` and configure it.
+* Create ckan_yoda network
+```shell
+docker network create ckan_yoda
+```
+
 
 ## Training
 
@@ -38,11 +43,11 @@ docker compose -f docker-compose.dev.yml up -d
 ```
 
 * Create sample data (**with the datetime information updated**):
-
+  
   - Enter in the mongo container
   - Enter the database
    ```
-   mongo -u [USERNAME]
+   mongo -u [USERNAME] -p [PASSWORD] admin
    ```
 
    - Create the database
@@ -94,11 +99,14 @@ docker compose -f docker-compose.dev.yml up -d
          "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"}
       ])
    ```
-* Create the predictionEntities and the subscriptions like in the `entities` folder
+* Create the prediction entities and the subscriptions:
+
+  - Enter in the orion container	
+  - Create the predictionEntities and the subscriptions like in the `entities` folder
 
 ### Test the solution
 
-1) Validate that the subscription and entities exist:
+1) Validate that the subscription and entities exist (inside the orion container):
 ```
 curl --location --request GET 'http://localhost:1026/ngsi-ld/v1/subscriptions/'
 ```

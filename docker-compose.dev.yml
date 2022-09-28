@@ -37,6 +37,8 @@ services:
       - "4040:4040"
     environment:
       - INIT_DAEMON_STEP=setup_spark
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=example
       - "constraint:node==spark-master"
     networks:
          - fiware
