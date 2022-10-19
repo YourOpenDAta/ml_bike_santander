@@ -42,66 +42,22 @@ docker compose -f docker-compose.train.yml up -d --build
 docker compose -f docker-compose.dev.yml up -d
 ```
 
-* Create sample data (**with the datetime information updated**):
+* Initialize the nifi recollection (Nifi will recollect data every 30 minutes and will store only the last 24 hours of historical data):
   
-  - Enter in the mongo container
-  - Enter the database
-   ```
-   mongo -u [USERNAME] -p [PASSWORD] admin
-   ```
-
-   - Create the database
-   ```
-   use bikes_santander
-   ```
-   - Create the collections **with the datetime information updated**
-   ```
-   db.historical.insertMany([
-         {"ayto:bicicletas_libres":"13",
-         "ayto:puestos_libres":"12",
-         "dc:modified":"2022-09-14T23:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"},
-         {"ayto:bicicletas_libres":"12",
-         "ayto:puestos_libres":"13",
-         "dc:modified":"2022-09-14T22:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"},
-         {"ayto:bicicletas_libres":"11",
-         "ayto:puestos_libres":"14",
-         "dc:modified":"2022-09-14T21:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"},
-         {"ayto:bicicletas_libres":"13",
-         "ayto:puestos_libres":"12",
-         "dc:modified":"2022-09-14T20:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"},   
-         {"ayto:bicicletas_libres":"13",
-         "ayto:puestos_libres":"12",
-         "dc:modified":"2022-09-14T19:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"},
-         {"ayto:bicicletas_libres":"10",
-         "ayto:puestos_libres":"15",
-         "dc:modified":"2022-09-14T18:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"},   
-         {"ayto:bicicletas_libres":"10",
-         "ayto:puestos_libres":"15",
-         "dc:modified":"2022-09-14T17:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"},
-         {"ayto:bicicletas_libres":"9",
-         "ayto:puestos_libres":"16",
-         "dc:modified":"2022-09-14T16:44:46Z",
-         "dc:identifier":"11",
-         "uri":"http://datos.santander.es/api/datos/tusbic_puestos_libres/11.json"}
-      ])
-   ```
+  - Enter in the nifi interface: https://localhost:9090/nifi
+  
+  - Log in with the following credentials: 
+      - username: root
+      - password: pass1234567890
+      
+   - Upload the template stored in ./nifi/Santander_template.xml
+   
+   - Run every component deployed by the template
+   
 * Create the prediction entities and the subscriptions:
 
-  - Enter in the orion container	
+  - Enter in the orion container
+  
   - Create the predictionEntities and the subscriptions like in the `entities` folder
 
 ### Test the solution
@@ -126,19 +82,19 @@ curl --location --request PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:n
 --data-raw '{
    "month":{
       "type":"Property",
-      "value":9
+      "value": [VALUE from 1 to 12]
    },
    "idStation": {
       "type":"Property",
-      "value":11
+      "value": [VALUE from 1 to 17]
    },
    "weekday":{
       "type":"Property",
-      "value":2
+      "value": [VALUE from 1 to 7]
    },
    "hour":{
       "type":"Property",
-      "value":23
+      "value": [VALUE from 0 to 23]
    },
    "predictionId":{
       "type":"Property",
@@ -173,23 +129,23 @@ Response:
    },
    "predictionValue":{
       "type":"Property",
-      "value":15
+      "value": [PREDICTED VALUE]
    },
    "idStation":{
       "type":"Property",
-      "value":"11"
+      "value": [VALUE set at the request]
    },
    "weekday":{
       "type":"Property",
-      "value":2
+      "value": [VALUE set at the request]
    },
    "hour":{
       "type":"Property",
-      "value":22
+      "value": [VALUE set at the request]
    },
    "month":{
       "type":"Property",
-      "value":9
+      "value": [VALUE set at the request]
    }
 ```
 
