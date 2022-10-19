@@ -150,7 +150,7 @@ Response:
 ```
 
 
-## Production (YODA)
+## Production (YODA) - Not yet implemented
 
 * Run the whole scenario in prod within YODA (only spark). You need to create the predictionEntities and the subscriptions like in the `entities` folder. They are required the creation of entities and the subscription of spark. In the consuming application there are two possibilities:
    - The application receives a notification when the prediction is made and receives the `urn:ngsi-ld:ResSantanderBikePrediction1`
