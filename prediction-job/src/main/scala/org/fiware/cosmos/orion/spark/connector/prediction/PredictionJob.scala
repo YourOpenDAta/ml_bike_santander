@@ -70,19 +70,18 @@ object PredictionJob {
         val weekday = ent.attrs("weekday")("value").toString.toInt
         val socketId = ent.attrs("socketId")("value").toString
         val predictionId = ent.attrs("predictionId")("value").toString
-        val idVariationStation = idStation-1 * 24 + hour
+        val num = (idStation.toInt - 1 )
+        val idVariationStation = num * 24 + hour
         val variationStation = variationStations(idVariationStation.toString).toString.toDouble
-
         val dateTenHoursBefore = dateTimeFormatter.format(new Date(System.currentTimeMillis() - 3600 * 1000 *10))
 
         val mongoUri = s"mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/bikes_santander.historical?authSource=admin"
         val mongoClient = MongoClients.create(mongoUri);
         val collection = mongoClient.getDatabase("bikes_santander").getCollection("historical")
-        val filter = and(gt("dc:modified", dateTenHoursBefore), equal("dc:identifier", idStation.toString))
+        val filter = and(gt("update_date", dateTenHoursBefore), equal("dc:identifier", idStation.toString))
         val docs = collection.find(filter)
-        val lastMeasure = docs.sort(Sorts.descending("dc:modified")).first().getString("ayto:bicicletas_libres").toInt
-        val tenHoursAgoMeasure = docs.sort(Sorts.ascending("dc:modified")).first().getString("ayto:bicicletas_libres").toInt
-
+        val lastMeasure = docs.sort(Sorts.descending("update_date")).first().getString("ayto:bicicletas_libres").toInt
+        val tenHoursAgoMeasure = docs.sort(Sorts.ascending("update_date")).first().getString("ayto:bicicletas_libres").toInt
         PredictionRequest(idStation, lastMeasure, tenHoursAgoMeasure, variationStation, weekday, hour, month, socketId, predictionId)
       })
 
