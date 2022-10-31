@@ -90,7 +90,7 @@ curl --location --request PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:n
    },
    "weekday":{
       "type":"Property",
-      "value": [VALUE from 1 to 7]
+      "value": [VALUE from 0 to 6]
    },
    "hour":{
       "type":"Property",
