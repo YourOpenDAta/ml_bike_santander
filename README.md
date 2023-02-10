@@ -106,6 +106,13 @@ curl --location --request PATCH 'http://localhost:1026/ngsi-ld/v1/entities/urn:n
    }
 }'
 ```
+Being:
+- idStation: station id
+- month: [1, 2, 3, ..., 12]
+- weekday: [1, ..., 7] (1 ->Sunday  7->Saturday)
+- time: : [0, ... , 23]
+- predictionId: String to identify the prediction in the consuming application
+- socketId: String to identify the socket with the client in the consuming application
 
 3) See if the `ResSantanderBikePrediction1` changes
 
@@ -163,131 +170,37 @@ docker compose up -d
 * Example of petition made to ask for a prediction:
 
 ```
-curl --location --request PATCH 'http://broker-yoda.dit.upm.es/ngsi-ld/v1/entities/urn:ngsi-ld:ReqSantanderBikePrediction1/attrs' \
+curl --location --request PATCH 'http://138.4.22.130/ngsi-ld/v1/entities/urn:ngsi-ld:ReqSantanderBikePrediction1/attrs' \
 --header 'Content-Type: application/json' \
---data-raw '{
-   "month":{
-      "type":"Property",
-      "value":9
-   },
-   "idStation": {
-      "type":"Property",
-      "value":11
-   },
-   "weekday":{
-      "type":"Property",
-      "value":2
-   },
-   "hour":{
-      "type":"Property",
-      "value":23
-   },
-   "predictionId":{
-      "type":"Property",
-      "value":"p-1662768034900"
-   },
-   "socketId":{
-      "type":"Property",
-      "value":"Fn0kKHEF-dOcr311AAAF"
-   }
-}'
+--data-raw '{...}'
+
 ```
 
-Being:
-- idStation: station id
-- month: [1, 2, 3, ..., 12]
-- weekday: [1, ..., 7] 1 ->Sunday  7->Saturday
-- time: : [0, ... , 23]
-- predictionId: String to identify the prediction in the consuming application
-- socketId: String to identify the socket with the client in the consuming application
 
 ### Testing everything worked
 
 1) Validate that the subscription and entities exist:
 ```
-curl --location --request GET 'http://broker-yoda.dit.upm.es/ngsi-ld/v1/subscriptions/'
+curl --location --request GET 'http://138.4.22.130/ngsi-ld/v1/subscriptions/'
 ```
 
 ```
-curl --location --request GET 'http://broker-yoda.dit.upm.es/ngsi-ld/v1/entities/urn:ngsi-ld:ReqSantanderBikePrediction1'
+curl --location --request GET 'http://138.4.22.130/ngsi-ld/v1/entities/urn:ngsi-ld:ReqSantanderBikePrediction1'
 ```
 
 ```
-curl --location --request GET 'http://broker-yoda.dit.upm.es/ngsi-ld/v1/entities/urn:ngsi-ld:ResSantanderBikePrediction1'
+curl --location --request GET 'http://138.4.22.130/ngsi-ld/v1/entities/urn:ngsi-ld:ResSantanderBikePrediction1'
 ```
 
 2) Update the `ReqSantanderBikePrediction1`
 ```
-curl --location --request PATCH 'http://broker-yoda.dit.upm.es/ngsi-ld/v1/entities/urn:ngsi-ld:ReqSantanderBikePrediction1/attrs' \
+curl --location --request PATCH 'http://138.4.22.130/ngsi-ld/v1/entities/urn:ngsi-ld:ReqSantanderBikePrediction1/attrs' \
 --header 'Content-Type: application/json' \
---data-raw '{
-   "month":{
-      "type":"Property",
-      "value":9
-   },
-   "idStation": {
-      "type":"Property",
-      "value":11
-   },
-   "weekday":{
-      "type":"Property",
-      "value":2
-   },
-   "hour":{
-      "type":"Property",
-      "value":23
-   },
-   "predictionId":{
-      "type":"Property",
-      "value":"p-1662768034900"
-   },
-   "socketId":{
-      "type":"Property",
-      "value":"Fn0kKHEF-dOcr311AAAF"
-   }
-}'
+--data-raw '{...}'
 ```
 
 3) See if the `ResSantanderBikePrediction1` changes
 
 ```
-curl --location --request GET 'http://broker-yoda.dit.upm.es/ngsi-ld/v1/entities/urn:ngsi-ld:ResSantanderBikePrediction1'
+curl --location --request GET 'http://138.4.22.130/ngsi-ld/v1/entities/urn:ngsi-ld:ResSantanderBikePrediction1'
 ```
-
-Response:
-```
-{
-   "@context":"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-   "id":"urn:ngsi-ld:ResSantanderBikePrediction1",
-   "type":"ResSantanderBikePrediction",
-   "socketId":{
-      "type":"Property",
-      "value":"Fn0kKHEF-dOcr311AAAF"
-   },
-   "predictionId":{
-      "type":"Property",
-      "value":"p-1662768034900"
-   },
-   "predictionValue":{
-      "type":"Property",
-      "value":15
-   },
-   "idStation":{
-      "type":"Property",
-      "value":"11"
-   },
-   "weekday":{
-      "type":"Property",
-      "value":2
-   },
-   "hour":{
-      "type":"Property",
-      "value":22
-   },
-   "month":{
-      "type":"Property",
-      "value":9
-   }
-```
-Result of prediction: 15 bikes available
-- predictionValue: number of bikes available
